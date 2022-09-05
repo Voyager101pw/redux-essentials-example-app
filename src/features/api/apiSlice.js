@@ -14,12 +14,15 @@ export const apiSlice = createApi({
     getPosts: builder.query({
       query: () => '/posts',  // URL для запроса: '/fakeApi/posts'
     }),
+    getPost: builder.query({
+      query: (postId) => `/posts/${postId}`,
+    })
   }),
 });
 
 // Экспортируем автоматически сгенерированный хук для конечной точки запроса `getPosts`
 // Ведь RTKQ-react автоматически генерирует хуки для каждой созданной нами конечной точки!
-export const { useGetPostsQuery } = apiSlice;
+export const { useGetPostsQuery, useGetPostQuery } = apiSlice;
 
 
 // Почему именно useGetPostsQuery ?

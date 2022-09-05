@@ -109,7 +109,7 @@ export const PostsList = () => {
     // Мы не можем просто вызвать posts.sort()напрямую, потому что Array.sort() изменяет существующий массив, 
     // поэтому нам нужно сначала сделать его копию. Чтобы избежать повторной сортировки при каждом повторном рендеринге
     
-    sortedPosts.sort((a, b) => b.date.localCompare(a.date));
+    sortedPosts.sort((a, b) => b.date.localeCompare(a.date));
     return sortedPosts;
   }, [posts]);
 
