@@ -21,17 +21,14 @@ function App() {
       <Navbar />
       <div className="App">
         <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <>
-                <AddPostForm />
-                <PostsList />
-              </>
-            )}
+          <Route exact path="/" render={() =>
+            <>
+              <AddPostForm />
+              <PostsList />
+            </>
+          }
           />
-          <Route exact path='/posts/:postId' component={SinglePostPage}/>
+          <Route exact path='/posts/:postId' component={SinglePostPage} />
           <Route exact path="/editPost/:postId" component={EditPostForm} />
           <Route exact path='/users' component={UsersList} />
           <Route exact path='/users/:userId' component={UserPage} />
