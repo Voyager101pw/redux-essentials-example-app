@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { 
@@ -94,21 +94,31 @@ const PostExcerpt = ({ post }) => {
 
 // с RTK Query
 export const PostsList = () => {
-  console.log(useGetPostsQuery())
+  // Сигнатура ответа от запроса на фейковый сервер
   const {
-    data: posts, // Это поле будет undefined до тех пор, пока не будет получен ответ .
+    // data: posts, // Это поле будет undefined до тех пор, пока не будет получен ответ .
+    data: posts = [],
     isLoading,
     isSuccess,
     isError,
     error
-  } = useGetPostsQuery();
+  } = useGetPostsQuery(); // Выполняем запрос на фековый сервер .../fakeApi/posts
+  
+  const sortedPosts = useMemo(() => {
+    const sortedPosts = posts.slice();
+    // Мы не можем просто вызвать posts.sort()напрямую, потому что Array.sort() изменяет существующий массив, 
+    // поэтому нам нужно сначала сделать его копию. Чтобы избежать повторной сортировки при каждом повторном рендеринге
+    
+    sortedPosts.sort((a, b) => b.date.localCompare(a.date));
+    return sortedPosts;
+  }, [posts]);
 
   let content;
 
   if (isLoading) {
     content = <Spinner text="Loading..." />
   } else if (isSuccess) {
-    content = posts.map((post) => (<PostExcerpt key={post.id} post={post} />))
+    content = sortedPosts.map((post) => (<PostExcerpt key={post.id} post={post} />))
   } else if (isError) {
     content = <div>{error.toString()}</div>
   }
