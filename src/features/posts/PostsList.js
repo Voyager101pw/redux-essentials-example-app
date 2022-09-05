@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 
+import cn from 'classnames';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   selectAllPosts,
@@ -98,12 +100,14 @@ export const PostsList = () => {
   const {
     // data: posts, // Это поле будет undefined до тех пор, пока не будет получен ответ .
     data: posts = [],
-    isLoading,
+    isLoading, // Если запрос выполняется в первые true, в дальнейшем всегда будет false
+    isFetching, // Если запрос выполняется true, если нет, то false
     isSuccess,
     isError,
-    error
+    error,
+    refetch // фун. для повторного получения данных из запроса
   } = useGetPostsQuery(); // Выполняем запрос на фековый сервер .../fakeApi/posts
-  
+
   const sortedPosts = useMemo(() => {
     const sortedPosts = posts.slice();
     // Мы не можем просто вызвать posts.sort()напрямую, потому что Array.sort() изменяет существующий массив, 
@@ -118,14 +122,23 @@ export const PostsList = () => {
   if (isLoading) {
     content = <Spinner text="Loading..." />
   } else if (isSuccess) {
-    content = sortedPosts.map((post) => (<PostExcerpt key={post.id} post={post} />))
+    const renderPosts = sortedPosts.map((post) => (
+      <PostExcerpt key={post.id} post={post} />
+    ));
+    
+    const containerClassname = cn('posts-container', {
+      disabled: isFetching
+    });
+
+    content = <div className={containerClassname}>{renderPosts}</div>
   } else if (isError) {
     content = <div>{error.toString()}</div>
   }
 
   return (
-    <section className="post-list">
+    <section className="posts-list">
       <h2>Posts</h2>
+      <button onClick={refetch}>Refetch Posts</button>
       {content}
     </section>
   )

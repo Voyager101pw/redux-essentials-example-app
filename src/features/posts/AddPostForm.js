@@ -13,7 +13,7 @@ import { selectAllUsers } from '../users/usersSlice.js';
 
 //   // const users = useSelector(state => state.users);
 //   const users = useSelector(selectAllUsers);
-  
+
 //   const onTitleChanged = e => setTitle(e.target.value);
 //   const onContentChanged = e => setContent(e.target.value);
 //   const onAuthorChanged = e => setUserId(e.target.value);
@@ -23,15 +23,15 @@ import { selectAllUsers } from '../users/usersSlice.js';
 //     if (canSave) {
 //       try {
 //         setRequestStatus('pending');
-        
-       
+
+
 //         // unwrap INFO: https://redux.js.org/tutorials/essentials/part-5-async-logic#checking-thunk-results-in-components
 //         await dispatch(addNewPost({ title, content, user:userId })).unwrap();
 //         // Redux-toolkit добавляет метод .unwrap() к возвращаемому Promise. Исп. этого метода возвр. еще один промис 
 //         // содержащий результат action.payload в случае fulfilled или помогает всплытию ошибки в случае rejected.
 //         // Это позволяет нам обрабатывать успехи и неудачи в компоненте, используя обычную try/catch логику.
 //         // Грубо говоря .unwrap() в зависимости что вернул промис в поле action.type дописывает .then с доп логикой
-        
+
 //         // Пример того, что будет заменять использование функции unwrap (пример условный):
 //         // Если промис вернул экшн в котором action.type === "posts/addNewPost/fulfilled", тогда
 //         // dispatch(...) + .then((action) => action.payload), если исп. с await то можно сразу получить наружу содержимое
@@ -44,7 +44,7 @@ import { selectAllUsers } from '../users/usersSlice.js';
 //         setContent('');
 //         setUserId('');
 //       } catch (err) {
-        
+
 //         // Если результат dispatch(addNewPost) - rejected, unwrap позволит не проглатить ошибку внутри промиса, 
 //         // а поднять её наружу и обрабатываем тут! Это очень важно!
 //         console.error('Failed to save the post: ', err)
@@ -117,7 +117,7 @@ export const AddPostForm = () => {
   const onAuthorChanged = e => setUserId(e.target.value);
 
   const canSave = [title, content, userId].every(Boolean) && !isLoading;
-  
+
   const onSavePostClicked = async () => {
     if (canSave) {
       try {
