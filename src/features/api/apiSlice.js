@@ -36,7 +36,14 @@ export const apiSlice = createApi({
 
       invalidatesTags: ['Post'], // Массив тегов, которые станут недействительными, каждый раз когда запустится мутация
       // Это позволит автоматически обновлять  getPosts конечную точку каждый раз, когда мы добавляем новый пост
-    })
+    }),
+    editPost: builder.mutation({
+      query: (post) => ({
+        url: `/posts/${post.id}`,
+        method: 'PATCH',
+        body: post,
+      }),
+    }),
   }),
 });
 
@@ -45,7 +52,8 @@ export const apiSlice = createApi({
 export const {
   useGetPostsQuery,
   useGetPostQuery,
-  useAddNewPostMutation // endpoint addNewPost: builder. > mutation <
+  useAddNewPostMutation, // endpoint addNewPost: builder. > mutation <
+  useEditPostMutation,
 } = apiSlice;
 
 
