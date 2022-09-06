@@ -19,10 +19,23 @@ export const apiSlice = createApi({
   endpoints: builder => ({
     getPosts: builder.query({
       query: () => '/posts',  // URL для запроса: '/fakeApi/posts'
-      providesTags: ['Post'],
+      
+      // providesTags: ['Post'], // конечная точка getPosts предоставляет тег 'Post'
+      // а addNewPost конечная точка мутации делает этот тег недействительным.
+      
+      providesTags: (result = [], error, arg) => [
+        'Post',
+        ...result.map(({id}) => ({ type: 'Post', id }))
+      ]
+      // Поле providesTags также может принимать функцию обратного вызова, которая получает result,
+      // arg и возвращает массив.  Это позволяет нам создавать записи тегов на основе идентификаторов
+      // извлекаемых данных. Точно так же invalidatesTagsможет быть и обратный вызов.
+      // т.е. мы сможем выборочно анулировать данные в кэше, т.е. в списке posts где лежит сущность каждого
+      // поста ввиде объекта, в котором есть id, title, content и тд.
     }),
     getPost: builder.query({
       query: (postId) => `/posts/${postId}`,
+      providesTags: (result, error, arg) => [{ type: 'Post', id: arg }]
     }),
     addNewPost: builder.mutation({
       query: (initialPost) => ({
@@ -36,6 +49,7 @@ export const apiSlice = createApi({
 
       invalidatesTags: ['Post'], // Массив тегов, которые станут недействительными, каждый раз когда запустится мутация
       // Это позволит автоматически обновлять  getPosts конечную точку каждый раз, когда мы добавляем новый пост
+      // т.е. мы делаем недействительными данные в кэше полученные с запроса /fakeApi/posts
     }),
     editPost: builder.mutation({
       query: (post) => ({
@@ -43,6 +57,7 @@ export const apiSlice = createApi({
         method: 'PATCH',
         body: post,
       }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Post', id: arg.id}]
     }),
   }),
 });
